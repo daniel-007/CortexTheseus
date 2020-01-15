@@ -10,12 +10,12 @@ github.com/Azure/azure-storage-blob-go/azblob
 github.com/RoaringBitmap/roaring
 # github.com/VictoriaMetrics/fastcache v1.5.6-0.20191231192519-b83c58d2fd5a
 github.com/VictoriaMetrics/fastcache
-# github.com/anacrolix/dht/v2 v2.3.2-0.20200103043204-8dce00767ebd
+# github.com/anacrolix/dht/v2 v2.3.1
 github.com/anacrolix/dht/v2
 github.com/anacrolix/dht/v2/krpc
 # github.com/anacrolix/go-libutp v1.0.2
 github.com/anacrolix/go-libutp
-# github.com/anacrolix/log v0.5.0
+# github.com/anacrolix/log v0.4.0
 github.com/anacrolix/log
 # github.com/anacrolix/missinggo v1.2.1
 github.com/anacrolix/missinggo
@@ -27,17 +27,18 @@ github.com/anacrolix/missinggo/iter
 github.com/anacrolix/missinggo/mime
 github.com/anacrolix/missinggo/orderedmap
 github.com/anacrolix/missinggo/pproffd
-github.com/anacrolix/missinggo/prioritybitmap
 github.com/anacrolix/missinggo/pubsub
-github.com/anacrolix/missinggo/resource
 github.com/anacrolix/missinggo/slices
 github.com/anacrolix/missinggo/x
 # github.com/anacrolix/missinggo/perf v1.0.0
 github.com/anacrolix/missinggo/perf
-# github.com/anacrolix/missinggo/v2 v2.3.1
+# github.com/anacrolix/missinggo/v2 v2.3.2-0.20200110051601-fc3212fb3984
 github.com/anacrolix/missinggo/v2
+github.com/anacrolix/missinggo/v2/bitmap
 github.com/anacrolix/missinggo/v2/conntrack
 github.com/anacrolix/missinggo/v2/iter
+github.com/anacrolix/missinggo/v2/prioritybitmap
+github.com/anacrolix/missinggo/v2/resource
 github.com/anacrolix/missinggo/v2/slices
 # github.com/anacrolix/mmsg v1.0.0
 github.com/anacrolix/mmsg
@@ -52,7 +53,7 @@ github.com/anacrolix/stm/stmutil
 github.com/anacrolix/sync
 # github.com/anacrolix/tagflag v1.0.1
 github.com/anacrolix/tagflag
-# github.com/anacrolix/torrent v1.11.0
+# github.com/anacrolix/torrent v1.11.1-0.20200114044227-ff8ce944e9e9
 github.com/anacrolix/torrent
 github.com/anacrolix/torrent/bencode
 github.com/anacrolix/torrent/fs
@@ -169,7 +170,7 @@ github.com/pborman/uuid
 github.com/peterh/liner
 # github.com/philhofer/fwd v1.0.0
 github.com/philhofer/fwd
-# github.com/pkg/errors v0.8.1
+# github.com/pkg/errors v0.9.0
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib

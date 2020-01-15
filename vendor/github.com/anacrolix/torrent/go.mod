@@ -4,13 +4,13 @@ require (
 	bazil.org/fuse v0.0.0-20180421153158-65cc252bf669
 	github.com/RoaringBitmap/roaring v0.4.21 // indirect
 	github.com/alexflint/go-arg v1.2.0
-	github.com/anacrolix/dht/v2 v2.3.2-0.20200103043204-8dce00767ebd
+	github.com/anacrolix/dht/v2 v2.3.1
 	github.com/anacrolix/envpprof v1.1.0
 	github.com/anacrolix/go-libutp v1.0.2
-	github.com/anacrolix/log v0.5.0
+	github.com/anacrolix/log v0.4.0
 	github.com/anacrolix/missinggo v1.2.1
 	github.com/anacrolix/missinggo/perf v1.0.0
-	github.com/anacrolix/missinggo/v2 v2.3.1
+	github.com/anacrolix/missinggo/v2 v2.3.2-0.20200110051601-fc3212fb3984
 	github.com/anacrolix/multiless v0.0.0-20191223025854-070b7994e841
 	github.com/anacrolix/sync v0.2.0
 	github.com/anacrolix/tagflag v1.0.1
@@ -29,7 +29,7 @@ require (
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/mattn/go-sqlite3 v1.13.0
-	github.com/pkg/errors v0.8.1
+	github.com/pkg/errors v0.9.0
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/net v0.0.0-20191125084936-ffdde1057850
 	golang.org/x/sys v0.0.0-20191126131656-8a8471f7e56d // indirect

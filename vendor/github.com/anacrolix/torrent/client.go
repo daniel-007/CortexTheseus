@@ -401,22 +401,26 @@ func (cl *Client) waitAccept() {
 	}
 }
 
-func (cl *Client) rejectAccepted(conn net.Conn) bool {
+func (cl *Client) rejectAccepted(conn net.Conn) error {
 	ra := conn.RemoteAddr()
 	rip := missinggo.AddrIP(ra)
 	if cl.config.DisableIPv4Peers && rip.To4() != nil {
-		return true
+		return errors.New("ipv4 peers disabled")
 	}
 	if cl.config.DisableIPv4 && len(rip) == net.IPv4len {
-		return true
+		return errors.New("ipv4 disabled")
+
 	}
 	if cl.config.DisableIPv6 && len(rip) == net.IPv6len && rip.To4() == nil {
-		return true
+		return errors.New("ipv6 disabled")
 	}
 	if cl.rateLimitAccept(rip) {
-		return true
+		return errors.New("source IP accepted rate limited")
 	}
-	return cl.badPeerIPPort(rip, missinggo.AddrPort(ra))
+	if cl.badPeerIPPort(rip, missinggo.AddrPort(ra)) {
+		return errors.New("bad source addr")
+	}
+	return nil
 }
 
 func (cl *Client) acceptConnections(l net.Listener) {
@@ -426,7 +430,7 @@ func (cl *Client) acceptConnections(l net.Listener) {
 		conn = pproffd.WrapNetConn(conn)
 		cl.rLock()
 		closed := cl.closed.IsSet()
-		reject := false
+		var reject error
 		if conn != nil {
 			reject = cl.rejectAccepted(conn)
 		}
@@ -442,8 +446,9 @@ func (cl *Client) acceptConnections(l net.Listener) {
 			continue
 		}
 		go func() {
-			if reject {
+			if reject != nil {
 				torrent.Add("rejected accepted connections", 1)
+				log.Fmsg("rejecting accepted conn: %v", reject).AddValue(debugLogValue).Log(cl.logger)
 				conn.Close()
 			} else {
 				go cl.incomingConnection(conn)
@@ -838,6 +843,7 @@ func (cl *Client) runReceivedConn(c *connection) {
 	}
 	if t == nil {
 		torrent.Add("received handshake for unloaded torrent", 1)
+		log.Fmsg("received handshake for unloaded torrent").AddValue(debugLogValue).Log(cl.logger)
 		cl.lock()
 		cl.onBadAccept(c.remoteAddr)
 		cl.unlock()
@@ -1033,12 +1039,11 @@ func (cl *Client) newTorrent(ih metainfo.Hash, specStorage storage.ClientImpl) (
 		maxEstablishedConns: cl.config.EstablishedConnsPerTorrent,
 
 		networkingEnabled: true,
-		requestStrategy:   2,
 		metadataChanged: sync.Cond{
 			L: cl.locker(),
 		},
-		duplicateRequestTimeout: 1 * time.Second,
 	}
+	t.requestStrategy = cl.config.DefaultRequestStrategy(t.requestStrategyCallbacks())
 	t.logger = cl.logger.WithValues(t).WithText(func(m log.Msg) string {
 		return fmt.Sprintf("%v: %s", t, m.Text())
 	})
@@ -1292,12 +1297,12 @@ func (cl *Client) publicIp(peer net.IP) net.IP {
 			cl.config.PublicIp4,
 			cl.findListenerIp(func(ip net.IP) bool { return ip.To4() != nil }),
 		)
-	} else {
-		return firstNotNil(
-			cl.config.PublicIp6,
-			cl.findListenerIp(func(ip net.IP) bool { return ip.To4() == nil }),
-		)
 	}
+
+	return firstNotNil(
+		cl.config.PublicIp6,
+		cl.findListenerIp(func(ip net.IP) bool { return ip.To4() == nil }),
+	)
 }
 
 func (cl *Client) findListenerIp(f func(net.IP) bool) net.IP {
@@ -1308,9 +1313,10 @@ func (cl *Client) findListenerIp(f func(net.IP) bool) net.IP {
 
 // Our IP as a peer should see it.
 func (cl *Client) publicAddr(peer net.IP) IpPort {
-	return IpPort{cl.publicIp(peer), uint16(cl.incomingPeerPort())}
+	return IpPort{IP: cl.publicIp(peer), Port: uint16(cl.incomingPeerPort())}
 }
 
+// ListenAddrs addresses currently being listened to.
 func (cl *Client) ListenAddrs() (ret []net.Addr) {
 	cl.lock()
 	defer cl.unlock()
@@ -1341,17 +1347,14 @@ func (cl *Client) clearAcceptLimits() {
 }
 
 func (cl *Client) acceptLimitClearer() {
-	timer := time.NewTimer(15 * time.Minute)
-	defer timer.Stop()
 	for {
 		select {
 		case <-cl.closed.LockedChan(cl.locker()):
 			return
-		case <-timer.C:
+		case <-time.After(15 * time.Minute):
 			cl.lock()
 			cl.clearAcceptLimits()
 			cl.unlock()
-			timer.Reset(15 * time.Minute)
 		}
 	}
 }

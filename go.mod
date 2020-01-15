@@ -5,9 +5,9 @@ go 1.13
 require (
 	github.com/Azure/azure-storage-blob-go v0.8.0
 	github.com/VictoriaMetrics/fastcache v1.5.6-0.20191231192519-b83c58d2fd5a
-	github.com/anacrolix/missinggo/v2 v2.3.1
+	github.com/anacrolix/missinggo/v2 v2.3.2-0.20200110051601-fc3212fb3984
 	github.com/anacrolix/tagflag v1.0.1
-	github.com/anacrolix/torrent v1.11.0
+	github.com/anacrolix/torrent v1.11.1-0.20200114044227-ff8ce944e9e9
 	github.com/aristanetworks/goarista v0.0.0-20190712234253-ed1100a1c015
 	github.com/bitly/go-simplejson v0.5.1-0.20181114203107-9db4a59bd4d8
 	github.com/bradfitz/iter v0.0.0-20190303215204-33e6a9893b0c
